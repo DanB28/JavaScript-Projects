@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+ <html class="no-js">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>celebration</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="home.css">
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src = "home.js"></script>
+
+
+    </head>
+    <body>
+       <div id = 'div1'>
+
+        <button id = button1>CLick for scores</button>
+        <div id = "scores"></div>
+       </div>
+        
+        <script>
+            $(document).ready(function(){
+                
+                $("button").click(function(){
+
+                   /* $.get("http://www.silverleaf-consulting.com/SummerCamp/DataDriveJSON.aspx",
+                    function(data, status){
+                        alert("Data: "+ data+"\nStatus: "+status);
+                    });*/
+
+                    $("#div1").load("demotest.asp",function(responseTxt, statusTxt,xhr){
+                        if(statusTxt =="success"){
+                            alert("external content loaded!");
+                        }
+                        if(statusTxt =="error"){
+                            alerrt("did not load external");
+                        }
+                    });
+                });
+        
+            });
+
+            </script>
+    </body>
+</html>

@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html class="no-js"> 
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Pattern Game</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="home.css">
+      
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src = "home.js"></script>
+        <script src="jquery.firefly-0.7.js"></script> 
+
+
+    </head>
+
+    <body>
+        <script>
+            $(function(){
+                $.firefly();
+            });
+        </script>
+       
+            <div id='container'>
+                <div id = infoContainer>
+                        <p id = score></p>
+                        <p id= lives></p>
+                </div>
+
+                <button  id='box1'>1</button>
+                <button  id='box2'>2</button>
+                <button  id='box3'>3</button>
+                <button  id='box4'>4</button>
+                <button  id='box5'>5</button>
+                <button  id='box6'>6</button>
+                <button  id='box7'>7</button>
+                <button  id='box8'>8</button>
+                <button  id='box9'>9</button>     
+            </div>
+
+            <div id = "buttonContainer">
+                    <button id ="startButton" class="fadeButton">Start</button>
+                    <p></p>
+                    <button id ="fadeButton" class= "fadeButton">Fade</button>
+                    <div>
+                            <p id ='question'></p>
+                            <p id ="status">Welcome! Push START to play</p>
+                        </div>
+
+                        <div id = "highscoreContainer">
+                            <label id ="emailLabel">Enter your Email</label>
+                            <input id = "email">
+                            <button id ='submitButton'>Submit</button>
+        
+                        </div>
+
+                </div>
+
+
+            </div>
+            <div id ="animation"></div>
+ 
+            
+    </body>
+
+<script>
+
+    
+
+        $("#startButton").click(function(){
+        start();
+        
+        });
+
+    var score =0;
+    var correct=0;
+    var answer = 0;
+    var count = 0;
+    var boxes =["#box1","#box2","#box3","#box4","#box5","#box6","#box7","#box8","#box9"];
+    var colors =['red','blue','orange','green','yellow','purple','pink','white','black'];
+    var numbers =[]; // random numbers for colors
+    var correctBoxes =[]; // what boxes have the contain answer color 
+    var lives =3;
+
+
+
+    function start(){
+
+        $("#status").text("");
+        $("#fadeButton").fadeIn();
+        $("#startButton").fadeOut();
+        
+        numbers = randNumArray(numbers);
+        document.getElementById('score').innerHTML = "Score: " +score;
+        document.getElementById('lives').innerHTML = "Lives: "+lives;
+
+
+
+        $("#question").css('visibility','hidden');
+        $("#fadeButton").fadeIn();
+        
+
+
+        $(boxes[0]).css('background-color',colors[numbers[0]]).css("border-color",colors[numbers[0]]);
+        $(boxes[1]).css('background-color',colors[numbers[1]]).css("border-color",colors[numbers[1]]);
+        $(boxes[2]).css('background-color',colors[numbers[2]]).css("border-color",colors[numbers[2]]);
+        $(boxes[3]).css('background-color',colors[numbers[3]]).css("border-color",colors[numbers[3]]);
+        $(boxes[4]).css('background-color',colors[numbers[4]]).css("border-color",colors[numbers[4]]);
+        $(boxes[5]).css('background-color',colors[numbers[5]]).css("border-color",colors[numbers[5]]);
+        $(boxes[6]).css('background-color',colors[numbers[6]]).css("border-color",colors[numbers[6]]);
+        $(boxes[7]).css('background-color',colors[numbers[7]]).css("border-color",colors[numbers[7]]);
+        $(boxes[8]).css('background-color',colors[numbers[8]]).css("border-color",colors[numbers[8]]);
+
+
+        answer = getQuestions(answer,numbers);
+        document.getElementById('question').innerHTML = "Click on all the boxes that were, "+ getColor(answer,colors);
+        correctBoxes = getCorrectBoxes(correctBoxes,answer,numbers);
+        count = getCount(correctBoxes);
+
+        console.log("new fade");
+        console.log("count: "+count);
+        console.log("lives: "+ lives);
+        testcorrectboxes(correctBoxes);
+        console.log('---------------------');
+
+
+    $("#fadeButton").click(function(){
+   
+       console.log("load");
+
+       // This is to have to container fade out, i also did it with the buttons
+       //   but everytime you andvance to the next question it will fade in and out 
+       //   depending on what 'question' you are on. so if you get 2 correct the next load will 
+       //   fade and unfade 3 times and is annoying. so i just changed the color and put in borders for the buttons 
+       // i left the console log in so you can see it 'load' each time.
+      
+        $(boxes[0]).css("background-color","black").css('color','white').css("border-color","black");
+        $(boxes[1]).css("background-color","black").css('color','white').css("border-color","black");
+        $(boxes[2]).css("background-color","black").css('color','white').css("border-color","black");
+        $(boxes[3]).css("background-color","black").css('color','white').css("border-color","black");
+        $(boxes[4]).css("background-color","black").css('color','white').css("border-color","black");
+        $(boxes[5]).css("background-color","black").css('color','white').css("border-color","black");
+        $(boxes[6]).css("background-color","black").css('color','white').css("border-color","black");
+        $(boxes[7]).css("background-color","black").css('color','white').css("border-color","black");
+        $(boxes[8]).css("background-color","black").css('color','white').css("border-color","black");
+
+      //$("#container").fadeIn();
+       
+        $("#question").css('visibility','visible');
+        $("#fadeButton").fadeOut();
+
+
+        document.getElementById("box1").disabled = false;
+        document.getElementById("box2").disabled = false;
+        document.getElementById("box3").disabled = false;
+        document.getElementById("box4").disabled = false;
+        document.getElementById("box5").disabled = false;
+        document.getElementById("box6").disabled = false;
+        document.getElementById("box7").disabled = false;
+        document.getElementById("box8").disabled = false;
+        document.getElementById("box9").disabled = false;
+       
+        });
+        
+    }// end of start
+
+        $("#box1").click(function(){
+            if(correctBoxes[0]==true){
+                $("#box1").css('background-color',colors[answer]);
+                console.log("correct: box 1 = "+ correctBoxes[0]);
+                correct++;
+                $("#status").text("CORRECT").css("color","green");
+                document.getElementById("box1").disabled = true;
+                    if(correct ==count){
+                        score++;
+                        correct=0;
+                        console.log("score: "+score);
+                        lives =3;
+                        start();
+                    }
+            }
+            else{
+                $("#box1").css('border-color',colors[numbers[0]]);
+                lives --;
+                $("#status").text("Sorry incorrect, Try Again").css("color","red");
+                document.getElementById('lives').innerHTML = "Lives: "+lives;
+                lifeCheck(lives,score);
+            }
+          
+        });
+
+        $("#box2").click(function(){
+            if(correctBoxes[1]==true){
+                $("#box2").css('background-color',colors[answer]);
+                console.log("correct: box 2 = "+ correctBoxes[1]);
+                correct ++;
+                $("#status").text("CORRECT").css("color","green");
+                document.getElementById("box2").disabled = true;
+                    if(correct ==count){
+                        score++;
+                        correct=0;
+                        lives =3;                 
+                        start();
+                    }
+
+            }
+            else{
+                $("#box2").css('border-color',colors[numbers[1]]);
+                lives--;
+                $("#status").text("Sorry incorrect, Try Again").css("color","red");
+                document.getElementById('lives').innerHTML = "Lives: "+lives;
+                lifeCheck(lives,score);
+            }
+        });
+
+        $("#box3").click(function(){
+            if(correctBoxes[2]==true){
+                $("#box3").css('background-color',colors[answer]);
+                console.log("correct: box 3 = "+ correctBoxes[2]);
+                correct++;
+                $("#status").text("CORRECT").css("color","green");
+                document.getElementById("box3").disabled = true;
+                    if(correct ==count){
+                        score++;
+                        correct=0;
+                        lives =3;
+                        start();
+                    }
+            }
+            else{
+                $("#box3").css('border-color',colors[numbers[2]]);
+                lives--;
+                $("#status").text("Sorry incorrect, Try Again").css("color","red");
+                document.getElementById('lives').innerHTML = "Lives: "+lives;
+                lifeCheck(lives,score);
+            }
+        });
+
+        $("#box4").click(function(){
+            if(correctBoxes[3]==true){
+                $("#box4").css('background-color',colors[answer]);
+                console.log("correct: box 4 = "+ correctBoxes[3]);
+                correct++;
+                $("#status").text("CORRECT").css("color","green");
+                document.getElementById("box4").disabled = true;
+                    if(correct ==count){
+                        score++;
+                        correct=0;
+                        lives =3;
+                        start();
+                    }
+            }
+            else{
+                $("#box4").css('border-color',colors[numbers[3]]);
+                lives--;
+                $("#status").text("Sorry incorrect, Try Again").css("color","red");
+                document.getElementById('lives').innerHTML = "Lives: "+lives;
+                lifeCheck(lives,score);
+            }
+        });
+
+        $("#box5").click(function(){
+            if(correctBoxes[4]==true){
+                $("#box5").css('background-color',colors[answer]);
+                $("#status").text("CORRECT").css("color","green");
+                correct++;
+                $("#status").text("CORRECT").css("color","green");
+                document.getElementById("box5").disabled = true;
+
+                    if(correct ==count){
+                        score++;
+                        correct=0;
+                        console.log("score: "+score);
+                        lives =3;
+                        start();
+                    }
+            }
+            else{
+                $("#box5").css('border-color',colors[numbers[4]]);
+                lives--;
+                $("#status").text("Sorry incorrect, Try Again").css("color","red");
+                document.getElementById('lives').innerHTML = "Lives: "+lives;
+                lifeCheck(lives,score);
+            }
+        });
+
+        $("#box6").click(function(){
+            if(correctBoxes[5]==true){
+                $("#box6").css('background-color',colors[answer]);
+                $("#status").text("CORRECT").css("color","green");
+                correct++;
+                document.getElementById("box6").disabled = true;
+                    if(correct ==count){
+                        score++;
+                        correct=0;
+                        console.log("score: "+score);
+                        lives =3;
+                        start();
+                    }
+            }
+            else{
+                $("#box6").css('border-color',colors[numbers[5]]);
+                lives--;
+                $("#status").text("Sorry incorrect, Try Again").css("color","red");
+                document.getElementById('lives').innerHTML = "Lives: "+lives;
+                lifeCheck(lives,score);
+            }
+        });
+
+        $("#box7").click(function(){
+            if(correctBoxes[6]==true){
+                $("#box7").css('background-color',colors[answer]);
+                $("#status").text("CORRECT").css("color","green");
+                correct++;
+                document.getElementById("box7").disabled = true;
+                    if(correct ==count){
+                        score++;
+                        correct=0;
+                        console.log("score: "+score);
+                        lives =3;
+                        start();
+                    }
+            }
+            else{
+                $("#box7").css('border-color',colors[numbers[6]]);
+                lives--;
+                $("#status").text("Sorry incorrect, Try Again").css("color","red");
+                document.getElementById('lives').innerHTML = "Lives: "+lives;
+                lifeCheck(lives,score);
+            }
+        });
+
+        $("#box8").click(function(){
+            if(correctBoxes[7]==true){
+                $("#box8").css('background-color',colors[answer]);
+                $("#status").text("CORRECT").css("color","green");
+                correct++;
+                document.getElementById("box8").disabled = true;
+                    if(correct ==count){
+                        score++;
+                        correct=0;
+                        console.log("score: "+score);
+                        lives =3;
+                        start();
+                    }
+            }
+            else{
+                $("#box8").css('border-color',colors[numbers[7]]);
+                lives--;
+                $("#status").text("Sorry incorrect, Try Again").css("color","red");
+                document.getElementById('lives').innerHTML = "Lives: "+lives;
+                lifeCheck(lives,score);
+            }
+        });
+        $("#box9").click(function(){
+            if(correctBoxes[8]==true){
+                $("#box9").css('background-color',colors[answer]);
+                $("#status").text("CORRECT").css("color","green");
+                correct++;
+                document.getElementById("box9").disabled = true;
+                    if(correct ==count){
+                        score++;
+                        correct=0;
+                        console.log("score: "+score);
+                        lives =3;
+                        start();
+                    }
+            }
+            else{
+                $("#box9").css('border-color',colors[numbers[8]]);
+                lives--; 
+                $("#status").text("Sorry incorrect, Try Again").css("color","red");
+                document.getElementById('lives').innerHTML = "Lives: "+lives;
+                lifeCheck(lives,score);
+            }
+        }); // end of box 9
+
+
+    </script>
+
+
+</html>
