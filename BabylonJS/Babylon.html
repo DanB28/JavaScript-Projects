@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+
+<html class="no-js"> 
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Babylon example</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+        
+        <script src="https://cdn.babylonjs.com/babylon.js"></script>
+        <script src="https://preview.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
+        <script src="https://code.jquery.com/pep/0.4.3/pep.js"></script>
+
+        <style>
+                html, body {
+                    overflow: hidden;
+                    width: 100%;
+                    height: 100%;
+                    margin: 0;
+                    padding: 0;
+                }
+    
+                #rendCanvas {
+                    width: 100%;
+                    height: 100%;
+                    touch-action: none;
+                }
+            </style>
+
+    </head>
+    <body>
+
+        <canvas id = 'rendCanvas' touch-action ="none"></canvas>
+
+        <script>
+            var canvas = document.getElementById('rendCanvas'); // canvas
+            var engine = new BABYLON.Engine(canvas,true); // 3d engine
+
+var createScene = function() {
+  var scene = new BABYLON.Scene(engine);
+  //scene.clearColor = BABYLON.Color3.Black;
+  scene.clearColor = new BABYLON.Color3(0.020, 0.043, 0.075);
+  var camera = new BABYLON.ArcRotateCamera("camera",  0, 0, 0, new BABYLON.Vector3(0, 0, -0), scene);
+  camera.setPosition(new BABYLON.Vector3(0, 50, -500));
+  camera.attachControl(canvas, true);
+
+
+  var light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene); new BABYLON.PointLight("light", new BABYLON.Vector3(0, 0, 0), scene);
+  light.diffuse = new BABYLON.Color3(1, 1, 1);
+  light.intensity = 1.0;
+  
+    var bigSphere = BABYLON.Mesh.CreateSphere("bigSphere", 75.0, 75.0, scene, false,  BABYLON.Mesh.DEFAULTSIDE);
+
+
+    var smallSphere = BABYLON.Mesh.CreateSphere("smallSphere", 15, 15, scene);
+	smallSphere.parent = bigSphere;
+
+	var sphereMaterial = new BABYLON.StandardMaterial("sphereMaterial", scene);
+	smallSphere.material = sphereMaterial;
+    smallSphere.material.diffuseColor = new BABYLON.Color3(0, 0, 1);
+    smallSphere.material.specularColor = new BABYLON.Color3(0, 0, 0);
+   smallSphere.emissiveColor = new BABYLON.Color3(0, 0, 0);
+
+
+    var smallSphere2 = BABYLON.Mesh.CreateSphere("smallSphere", 20, 20, scene);
+	smallSphere2.parent = bigSphere;
+
+	var sphereMaterial = new BABYLON.StandardMaterial("sphereMaterial", scene);
+	smallSphere2.material = sphereMaterial;
+    smallSphere2.material.diffuseColor = new BABYLON.Color3(1, 0, 0);
+    smallSphere2.material.specularColor = new BABYLON.Color3(0, 0, 0);
+   smallSphere2.emissiveColor = new BABYLON.Color3(0, 0, 0);
+
+
+    var smallSphere3 = BABYLON.Mesh.CreateSphere("smallSphere", 10, 10, scene);
+	smallSphere3.parent = smallSphere2;
+
+	var sphereMaterial = new BABYLON.StandardMaterial("sphereMaterial", scene);
+	smallSphere3.material = sphereMaterial;
+    smallSphere3.material.diffuseColor = new BABYLON.Color3(1, 0, 1);
+    smallSphere3.material.specularColor = new BABYLON.Color3(0, 0, 0);
+    smallSphere3.emissiveColor = new BABYLON.Color3(0, 0, 0);
+
+
+    var alpha = Math.PI;
+    var alpha2 = Math.PI;
+
+
+  scene.registerBeforeRender(function() {
+    smallSphere.position = camera.position;
+
+		smallSphere.position = new BABYLON.Vector3(50 * Math.sin(alpha), smallSphere.parent.position.y, 50 * Math.cos(alpha));
+		smallSphere.rotation.y += .09;
+
+        smallSphere2.position = new BABYLON.Vector3(100 * Math.sin(1.5*alpha), smallSphere2.parent.position.y, 100 * Math.cos(1.5*alpha));
+		smallSphere2.rotation.y += .09;
+
+        smallSphere3.position = new BABYLON.Vector3(25 * Math.sin(alpha), smallSphere2.parent.position.y, 25 * Math.cos(alpha));
+		smallSphere3.rotation.y += .05;
+
+		alpha += 0.02;
+        alpha2 += 0.01;
+
+
+  });
+
+  return scene;
+};
+
+     var scene = createScene(); //Call the createScene function
+              
+
+// Register a render loop to repeatedly render the scene
+engine.runRenderLoop(function () { 
+        scene.render();
+});
+
+             window.addEventListener("resize", function () { 
+                engine.resize();
+        });
+        
+        
+        </script>
+
+    
+        
+    </body>
+</html>
